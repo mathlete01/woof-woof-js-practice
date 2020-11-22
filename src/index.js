@@ -7,6 +7,27 @@ document.addEventListener("DOMContentLoaded", () => {
     dogBar = document.getElementById("dog-bar")
     dogInfo = document.getElementById("dog-info")
 
+    function updateDB(obj, property){
+        let patchURL = `${pupURL}/${obj.id}`
+        fetch(patchURL, {
+            method: "PATCH",
+            headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                "isGoodDog": property
+            })
+        })
+    }
+
+    function toggleGoodness(obj, btn){
+        obj.isGoodDog = !obj.isGoodDog
+        updateDB(obj, obj.isGoodDog)
+        console.log(obj.isGoodDog)
+        obj.isGoodDog ? btn.innerText = "Good Dog" : btn.innerText = "Bad Dog"
+    }
+
     function showInfo(event, obj){
         // const pup = event.target
         // name = pup.innerText
@@ -22,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const btn = document.createElement("button")
         obj.isGoodDog ? btn.innerText = "Good Dog" : btn.innerText = "Bad Dog"
+        btn.addEventListener("click", (event) => toggleGoodness(obj, btn))
         div.appendChild(btn)
         
         dogInfo.innerHTML = ""
