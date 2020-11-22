@@ -3,9 +3,45 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     const pupURL = "http://localhost:3000/pups"
+    let filterOn = true
 
     dogBar = document.getElementById("dog-bar")
     dogInfo = document.getElementById("dog-info")
+    filterBtn = document.getElementById("good-dog-filter")
+
+    filterBtn.addEventListener("click", toggleFilter)
+
+    function updateDB(obj, property){
+        let patchURL = `${pupURL}/${obj.id}`
+        fetch(patchURL, {
+            method: "PATCH",
+            headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                "isGoodDog": property
+            })
+        })
+    }
+
+    function toggleGoodness(obj, btn){
+        obj.isGoodDog = !obj.isGoodDog
+        updateDB(obj, obj.isGoodDog)
+        console.log(obj.isGoodDog)
+        obj.isGoodDog ? btn.innerText = "Good Dog" : btn.innerText = "Bad Dog"
+    }
+
+    function toggleFilter(){
+        if(filterOn == false){
+            filterOn = true
+            filterBtn.innerText = "Filter good dogs: ON"
+        }else {
+            filterOn = false
+            filterBtn.innerText = "Filter good dogs: OFF"
+        }
+        //console.log(filterOn)
+    }
 
     function showInfo(event, obj){
         // const pup = event.target
@@ -22,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const btn = document.createElement("button")
         obj.isGoodDog ? btn.innerText = "Good Dog" : btn.innerText = "Bad Dog"
+        btn.addEventListener("click", (event) => toggleGoodness(obj, btn))
         div.appendChild(btn)
         
         dogInfo.innerHTML = ""
