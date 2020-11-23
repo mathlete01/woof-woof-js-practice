@@ -87,9 +87,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(function (response) {
             return response.json();
             })       
-        .then(function (myJSON) {
-            jsonObj = myJSON
-            return makeSpans(myJSON)
+        .then(function (response) {
+            jsonObj = response
+            return makeSpans(response)
         });
     }
 
