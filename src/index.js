@@ -3,7 +3,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     const pupURL = "http://localhost:3000/pups"
-    let filterOn = true
+    jsonObj = ""
+    let filterOn = false
 
     dogBar = document.getElementById("dog-bar")
     dogInfo = document.getElementById("dog-info")
@@ -40,7 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
             filterOn = false
             filterBtn.innerText = "Filter good dogs: OFF"
         }
-        //console.log(filterOn)
+        console.log(filterOn)
+        makeSpans()
     }
 
     function showInfo(event, obj){
@@ -67,23 +69,63 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // When you have this information, you'll need to add a span with the pup's name to the dog bar (ex: <span>Mr. Bonkers</span>).
-    function makeSpans(pups){
+    function makeSpans(){
+        dogBar.innerHTML = ""
+        let pups = jsonObj
         for (const pup of pups){
             const mySpan = document.createElement("span")
             mySpan.setAttribute("id", pup.id)
             mySpan.innerText = pup.name
             mySpan.addEventListener("click", (event) => showInfo(event, pup))
+            console.log (`filterOn = ${filterOn}`)
+            if(filterOn == false){
             dogBar.appendChild(mySpan)
+            }else{
+                if(pup.isGoodDog == true){
+                    dogBar.appendChild(mySpan)
+                }
+            }
         }
     }
+
+    // function makeSpans(pups){
+    //     for (const pup of pups){
+    //         const mySpan = document.createElement("span")
+    //         mySpan.setAttribute("id", pup.id)
+    //         mySpan.innerText = pup.name
+    //         mySpan.addEventListener("click", (event) => showInfo(event, pup))
+    //         console.log (`filterOn = ${filterOn}`)
+    //         if(filterOn == false){
+    //         dogBar.appendChild(mySpan)
+    //         }else{
+    //             if(pup.isGoodDog == true){
+    //                 dogBar.appendChild(mySpan)
+    //             }
+    //         }
+    //     }
+    // }
 
     function getAllPups(){
         fetch(pupURL)
         //why is response in parens below?
         //Why do a => a.json instead of a =. b.json?
-        .then(response => response.json())
-        .then(myJSON => {
-            makeSpans(myJSON)
+        // .then(console.log(`response before = ${response}`))
+        // .then(response => response.json())
+        .then(function (response) {
+            console.log(`response.json= ${response.json}`)
+            return response.json();
+            })
+        //.then(console.log(`response after = ${response}`))
+        //.then(jsonObj = myJSON)
+        //.then(console.log(`myJSON = ${myJSON}`))
+       
+        // .then(myJSON => {
+        //     makeSpans(myJSON)
+        // });
+        .then(function (myJSON) {
+            console.log(`myJSON = ${myJSON}`)
+            jsonObj = myJSON
+            return makeSpans(myJSON)
         });
     }
 
