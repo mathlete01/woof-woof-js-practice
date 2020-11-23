@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         obj.isGoodDog = !obj.isGoodDog
         updateDB(obj, obj.isGoodDog)
         obj.isGoodDog ? btn.innerText = "Good Dog" : btn.innerText = "Bad Dog"
+        makeSpans()
     }
 
     function toggleFilter(){
